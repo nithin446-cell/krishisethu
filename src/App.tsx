@@ -10,10 +10,9 @@ import EnhancedAddProduce from './components/Farmer/EnhancedAddProduce';
 import EnhancedMarketPrices from './components/Market/EnhancedMarketPrices';
 import TraderListings from './components/Trader/TraderListings';
 import EnhancedBiddingSystem from './components/Bidding/EnhancedBiddingSystem';
-import FarmerBidManagement from './components/Bidding/FarmerBidManagement';
 import EnhancedChatInterface from './components/Chat/EnhancedChatInterface';
-import EnhancedTransactionTracking from './components/Transaction/EnhancedTransactionTracking';
-import EnhancedGovernmentSchemes from './components/Government/EnhancedGovernmentSchemes';
+import TransactionTracking from './components/Transaction/TransactionTracking';
+import GovernmentSchemes from './components/Government/GovernmentSchemes';
 import TraderListingsForFarmers from './components/Trader/TraderListingsForFarmers';
 import { 
   mockUsers, 
@@ -32,7 +31,6 @@ function App() {
   const [produces, setProduces] = useState(mockProduce);
   const [selectedProduce, setSelectedProduce] = useState<Produce | null>(null);
   const [showBidding, setShowBidding] = useState(false);
-  const [showFarmerBidManagement, setShowFarmerBidManagement] = useState(false);
   const [chatUser, setChatUser] = useState<User | null>(null);
   const [showTransaction, setShowTransaction] = useState(false);
   const [selectedTransaction, setSelectedTransaction] = useState(mockTransactions[0]);
@@ -94,34 +92,6 @@ function App() {
     console.log('Sending message:', content);
   };
 
-  const handleSendImage = (imageUrl: string) => {
-    console.log('Sending image:', imageUrl);
-  };
-
-  const handleSendPriceOffer = (amount: number, message: string) => {
-    console.log('Sending price offer:', amount, message);
-  };
-
-  const handleAcceptBid = (bidId: string) => {
-    console.log('Accepting bid:', bidId);
-    // Update bid status and create transaction
-  };
-
-  const handleRejectBid = (bidId: string) => {
-    console.log('Rejecting bid:', bidId);
-  };
-
-  const handleNegotiateBid = (bidId: string) => {
-    console.log('Negotiating bid:', bidId);
-  };
-
-  const handleRaiseDispute = () => {
-    console.log('Raising dispute...');
-  };
-
-  const handleRateTransaction = (rating: number, review: string) => {
-    console.log('Rating transaction:', rating, review);
-  };
   const handleViewTransaction = () => {
     setShowTransaction(true);
   };
@@ -136,12 +106,10 @@ function App() {
 
   if (showTransaction) {
     return (
-      <EnhancedTransactionTracking
+      <TransactionTracking
         transaction={selectedTransaction}
         onBack={handleBackFromTransaction}
         onContactSupport={handleContactSupport}
-        onRaiseDispute={handleRaiseDispute}
-        onRateTransaction={handleRateTransaction}
       />
     );
   }
@@ -154,25 +122,11 @@ function App() {
           otherUser={chatUser}
           messages={mockMessages}
           onSendMessage={handleSendMessage}
-          onSendImage={handleSendImage}
-          onSendPriceOffer={handleSendPriceOffer}
           onBack={() => setChatUser(null)}
         />
       );
     }
 
-    if (showFarmerBidManagement && selectedProduce) {
-      return (
-        <FarmerBidManagement
-          produce={selectedProduce}
-          onAcceptBid={handleAcceptBid}
-          onRejectBid={handleRejectBid}
-          onNegotiate={handleNegotiateBid}
-          onBack={() => setShowFarmerBidManagement(false)}
-          onContactTrader={(traderId) => setChatUser(mockUsers.find(u => u.id === traderId) || mockUsers[1])}
-        />
-      );
-    }
     if (showBidding && selectedProduce) {
       return (
         <EnhancedBiddingSystem
@@ -196,10 +150,6 @@ function App() {
             onViewPrices={() => setActiveTab('market')}
             onViewSchemes={() => setActiveTab('schemes')}
             onViewTraders={() => setActiveTab('traders')}
-            onViewBids={(produce) => {
-              setSelectedProduce(produce);
-              setShowFarmerBidManagement(true);
-            }}
           />
         ) : (
           <div className="p-4 space-y-6">
@@ -321,7 +271,7 @@ function App() {
         );
 
       case 'schemes':
-        return <EnhancedGovernmentSchemes schemes={mockGovernmentSchemes} />;
+        return <GovernmentSchemes schemes={mockGovernmentSchemes} />;
       
       case 'traders':
         return (
