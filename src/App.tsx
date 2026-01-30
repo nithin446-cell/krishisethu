@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { LanguageProvider } from './contexts/LanguageContext';
 import SplashScreen from './components/Onboarding/SplashScreen';
 import LanguageSelection from './components/Onboarding/LanguageSelection';
 import LoginRegistration from './components/Auth/LoginRegistration';
@@ -12,6 +13,7 @@ import EnhancedBiddingSystem from './components/Bidding/EnhancedBiddingSystem';
 import EnhancedChatInterface from './components/Chat/EnhancedChatInterface';
 import TransactionTracking from './components/Transaction/TransactionTracking';
 import GovernmentSchemes from './components/Government/GovernmentSchemes';
+import TraderListingsForFarmers from './components/Trader/TraderListingsForFarmers';
 import { 
   mockUsers, 
   mockProduce, 
@@ -24,7 +26,6 @@ import { User, Produce, Bid } from './types';
 
 function App() {
   const [appState, setAppState] = useState<'splash' | 'language' | 'auth' | 'main'>('splash');
-  const [selectedLanguage, setSelectedLanguage] = useState('');
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [activeTab, setActiveTab] = useState('dashboard');
   const [produces, setProduces] = useState(mockProduce);
@@ -38,9 +39,6 @@ function App() {
     setAppState('language');
   };
 
-  const handleLanguageSelect = (language: string) => {
-    setSelectedLanguage(language);
-  };
 
   const handleLanguageContinue = () => {
     setAppState('auth');
@@ -55,33 +53,23 @@ function App() {
   if (appState === 'splash') {
     return <SplashScreen onComplete={handleSplashComplete} />;
   }
-
-  if (appState === 'language') {
-    return (
-      <LanguageSelection
-        selectedLanguage={selectedLanguage}
-        onLanguageSelect={handleLanguageSelect}
-        onContinue={handleLanguageContinue}
-      />
-    );
-  }
-
-  if (appState === 'auth') {
-    return <LoginRegistration onLogin={handleLogin} />;
-  }
-
-  if (!currentUser) {
-    return <div>Loading...</div>;
-  }
   const handleAddProduce = (produceData: any) => {
     const newProduce: Produce = {
-      ...produceData,
-      id: Date.now().toString(),
-      farmerId: currentUser.id,
-      currentPrice: produceData.basePrice,
+      id: produceData.id,
+      farmerId: produceData.farmer_id,
+      name: produceData.name,
+      variety: produceData.variety || '',
+      quantity: produceData.quantity,
+      unit: produceData.unit,
+      basePrice: produceData.base_price,
+      currentPrice: produceData.current_price,
       images: produceData.images.length > 0 ? produceData.images : [
         'https://images.pexels.com/photos/1656663/pexels-photo-1656663.jpeg'
       ],
+      description: produceData.description || '',
+      location: produceData.location,
+      harvestDate: produceData.harvest_date || '',
+      status: produceData.status as 'active' | 'bidding' | 'sold' | 'expired',
       bids: []
     };
     setProduces([...produces, newProduce]);
@@ -169,6 +157,7 @@ function App() {
             onAddProduce={() => setActiveTab('add')}
             onViewPrices={() => setActiveTab('market')}
             onViewSchemes={() => setActiveTab('schemes')}
+            onViewTraders={() => setActiveTab('traders')}
           />
         ) : (
           <div className="p-4 space-y-6">
@@ -204,6 +193,7 @@ function App() {
           <EnhancedAddProduce
             onSubmit={handleAddProduce}
             onBack={() => setActiveTab('dashboard')}
+            farmerId={currentUser.id}
           />
         );
       
@@ -292,33 +282,54 @@ function App() {
       case 'schemes':
         return <GovernmentSchemes schemes={mockGovernmentSchemes} />;
       
+      case 'traders':
+        return (
+          <TraderListingsForFarmers
+            traders={mockUsers.filter(u => u.type === 'trader')}
+            myProduce={produces.filter(p => p.farmerId === currentUser.id)}
+            onContactTrader={(trader) => setChatUser(trader)}
+          />
+        );
+      
       default:
         return <div>Page not found</div>;
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {!chatUser && !showBidding && !showTransaction && (
-        <Header 
-          userName={currentUser.name}
-          location={currentUser.location}
-          unreadCount={3}
-        />
+    <LanguageProvider>
+      {appState === 'language' && (
+        <LanguageSelection onContinue={handleLanguageContinue} />
       )}
-      
-      <main className={`${!chatUser && !showBidding && !showTransaction ? 'pt-4 pb-20' : 'pb-20 h-screen'}`}>
-        {renderContent()}
-      </main>
-      
-      {!chatUser && !showBidding && !showTransaction && (
-        <Navigation
-          activeTab={activeTab}
-          onTabChange={setActiveTab}
-          userType={currentUser.type}
-        />
+
+      {appState === 'auth' && <LoginRegistration onLogin={handleLogin} />}
+
+      {appState === 'main' && currentUser && (
+        <div className="min-h-screen bg-gray-50">
+          {!chatUser && !showBidding && !showTransaction && (
+            <Header 
+              userName={currentUser.name}
+              location={currentUser.location}
+              unreadCount={3}
+            />
+          )}
+          
+          <main className={`${!chatUser && !showBidding && !showTransaction ? 'pt-4 pb-20' : 'pb-20 h-screen'}`}>
+            {renderContent()}
+          </main>
+          
+          {!chatUser && !showBidding && !showTransaction && (
+            <Navigation
+              activeTab={activeTab}
+              onTabChange={setActiveTab}
+              userType={currentUser.type}
+            />
+          )}
+        </div>
       )}
-    </div>
+
+      {!currentUser && appState === 'main' && <div>Loading...</div>}
+    </LanguageProvider>
   );
 }
 
