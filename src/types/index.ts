@@ -23,6 +23,7 @@ export interface Produce {
   harvestDate: string;
   status: 'active' | 'bidding' | 'sold' | 'expired';
   bids: Bid[];
+  verified?: boolean;
 }
 
 export interface Bid {
@@ -43,7 +44,7 @@ export interface Transaction {
   traderId: string;
   amount: number;
   quantity: number;
-  status: 'pending' | 'confirmed' | 'in_transit' | 'delivered' | 'completed';
+  status: 'pending' | 'deal_accepted' | 'produce_collected' | 'payment_initiated' | 'payment_completed' | 'completed';
   timeline: TransactionStep[];
   paymentMethod?: 'bank_transfer' | 'upi' | 'digital_wallet';
   paymentStatus?: 'pending' | 'processing' | 'confirmed' | 'completed';

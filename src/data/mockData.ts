@@ -34,6 +34,7 @@ export const mockProduce: Produce[] = [
     location: 'Khadakwasla, Pune',
     harvestDate: '2024-03-15',
     status: 'active',
+    verified: true,
     bids: [
       {
         id: 'b1',
@@ -61,6 +62,7 @@ export const mockProduce: Produce[] = [
     location: 'Khadakwasla, Pune',
     harvestDate: '2024-03-10',
     status: 'active',
+    verified: false,
     bids: []
   }
 ];
@@ -184,6 +186,7 @@ export const mockTransactions: Transaction[] = [
     traderId: '550e8400-e29b-41d4-a716-446655440002',
     amount: 115000,
     quantity: 50,
+    status: 'payment_initiated',
     status: 'confirmed',
     paymentMethod: 'bank_transfer',
     paymentStatus: 'confirmed',
