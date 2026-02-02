@@ -1,28 +1,5 @@
 import React, { useState } from 'react';
-import { 
-  Package, 
-  TrendingUp, 
-  Clock, 
-  CheckCircle, 
-  Bell,
-  Eye,
-  Star,
-  MapPin,
-  IndianRupee as Rupee,
-  ArrowUp,
-  ArrowDown,
-  Activity,
-  CreditCard,
-  Truck,
-  AlertTriangle,
-  Filter,
-  Calendar,
-  BarChart3,
-  ShoppingCart,
-  Wallet,
-  FileText,
-  Phone
-} from 'lucide-react';
+import { Package, TrendingUp, Clock, CircleCheck as CheckCircle, Bell, Eye, Star, MapPin, IndianRupee as Rupee, ArrowUp, ArrowDown, Activity, CreditCard, Truck, TriangleAlert as AlertTriangle, ListFilter as Filter, Calendar, ChartBar as BarChart3, ShoppingCart, Wallet, FileText, Phone } from 'lucide-react';
 import { Produce, Transaction } from '../../types';
 
 interface TraderDashboardProps {

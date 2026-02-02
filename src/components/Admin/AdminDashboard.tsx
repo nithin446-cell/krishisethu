@@ -1,30 +1,5 @@
 import React, { useState } from 'react';
-import { 
-  Users, 
-  Shield, 
-  AlertTriangle, 
-  TrendingUp, 
-  Gift,
-  CheckCircle,
-  Clock,
-  XCircle,
-  Upload,
-  Download,
-  Eye,
-  Edit,
-  Trash2,
-  Plus,
-  Search,
-  Filter,
-  BarChart3,
-  FileText,
-  Settings,
-  Bell,
-  Activity,
-  DollarSign,
-  Package,
-  MessageSquare
-} from 'lucide-react';
+import { Users, Shield, TriangleAlert as AlertTriangle, TrendingUp, Gift, CircleCheck as CheckCircle, Clock, Circle as XCircle, Upload, Download, Eye, CreditCard as Edit, Trash2, Plus, Search, ListFilter as Filter, ChartBar as BarChart3, FileText, Settings, Bell, Activity, DollarSign, Package, MessageSquare } from 'lucide-react';
 
 const AdminDashboard: React.FC = () => {
   const [activeSection, setActiveSection] = useState('overview');

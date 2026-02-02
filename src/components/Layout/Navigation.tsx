@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, TrendingUp, Plus, MessageCircle, User, Settings, Users, Shield, AlertTriangle, Gift } from 'lucide-react';
+import { Hop as Home, TrendingUp, Plus, MessageCircle, User, Settings, Users, Shield, TriangleAlert as AlertTriangle, Gift } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 
 interface NavigationProps {
